@@ -1,0 +1,116 @@
+[gd_scene load_steps=16 format=2]
+
+[ext_resource path="res://v1.1 dungeon crawler 16x16 pixel pack/enemies/slime/slime_idle_anim_f4.png" type="Texture" id=1]
+[ext_resource path="res://v1.1 dungeon crawler 16x16 pixel pack/enemies/slime/slime_idle_anim_f5.png" type="Texture" id=2]
+[ext_resource path="res://v1.1 dungeon crawler 16x16 pixel pack/enemies/slime/slime_run_anim_f2.png" type="Texture" id=3]
+[ext_resource path="res://v1.1 dungeon crawler 16x16 pixel pack/enemies/slime/slime_run_anim_f3.png" type="Texture" id=4]
+[ext_resource path="res://v1.1 dungeon crawler 16x16 pixel pack/enemies/slime/slime_run_anim_f5.png" type="Texture" id=5]
+[ext_resource path="res://v1.1 dungeon crawler 16x16 pixel pack/enemies/slime/slime_run_anim_f4.png" type="Texture" id=6]
+[ext_resource path="res://v1.1 dungeon crawler 16x16 pixel pack/enemies/slime/slime_idle_anim_f0.png" type="Texture" id=7]
+[ext_resource path="res://v1.1 dungeon crawler 16x16 pixel pack/enemies/slime/slime_run_anim_f0.png" type="Texture" id=8]
+[ext_resource path="res://v1.1 dungeon crawler 16x16 pixel pack/enemies/slime/slime_run_anim_f1.png" type="Texture" id=9]
+[ext_resource path="res://v1.1 dungeon crawler 16x16 pixel pack/enemies/slime/slime_idle_anim_f2.png" type="Texture" id=10]
+[ext_resource path="res://v1.1 dungeon crawler 16x16 pixel pack/enemies/slime/slime_idle_anim_f3.png" type="Texture" id=11]
+[ext_resource path="res://v1.1 dungeon crawler 16x16 pixel pack/enemies/slime/slime_idle_anim_f1.png" type="Texture" id=12]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends KinematicBody2D
+
+const UP = Vector2(0,-1)
+const GRAVITY = 20
+const MAXFALLSPEED = 200
+const MAXSPEED = 80
+const JUMPFORCE = 300
+const ACCEL = 10
+
+var motion = Vector2()
+var facing_right = true
+
+func _ready():
+	pass # Replace with function body.
+
+
+func _physics_process(delta):
+	
+	motion.y += GRAVITY
+	if motion.y > MAXFALLSPEED:
+		motion.y = MAXFALLSPEED
+	
+	if facing_right = true:
+		$Sprite.scale.x = 1
+	else:
+		$Sprite.scale.x = -1
+	motion.x = clamp(motion.x, -MAXSPEED, MAXSPEED)
+	
+	if Input.is_action_pressed\"(\"right\"):
+		motion.x += ACCEL
+		facing_right = true
+		$AnimationPlayer.play(\"Run\")
+	elif Input.is_action_pressed\"(\"left\"):
+		motion.x -= ACCEL
+		facing_right = false
+		$AnimationPlayer.play(\"Run\")
+	else:
+		motion.x = lerp(motion.x,0,0.2)
+		$AnimationPlayer.play(\"Idle\")
+	
+	if is_on_floor():
+		if Input.is_action_just_pressed(\"jump\"):
+			motion.y = -JUMPFORCE
+		
+motion = move_and_slide(motion, UP)
+"
+
+[sub_resource type="CapsuleShape2D" id=2]
+radius = 35.0
+height = 0.0
+
+[sub_resource type="SpriteFrames" id=3]
+animations = [ {
+"frames": [ ExtResource( 12 ), ExtResource( 7 ), ExtResource( 10 ), ExtResource( 11 ), ExtResource( 1 ), ExtResource( 2 ) ],
+"loop": true,
+"name": "Idle",
+"speed": 5.0
+}, {
+"frames": [ ExtResource( 8 ), ExtResource( 9 ), ExtResource( 3 ), ExtResource( 4 ), ExtResource( 6 ), ExtResource( 5 ) ],
+"loop": true,
+"name": "Run",
+"speed": 5.0
+} ]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Sprite" type="Sprite" parent="."]
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Sprite"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite/StaticBody2D"]
+
+[node name="Sprite2" type="Sprite" parent="."]
+__meta__ = {
+"_edit_group_": true
+}
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Sprite2"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2/StaticBody2D"]
+
+[node name="KinematicBody2D" type="KinematicBody2D" parent="."]
+script = SubResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="KinematicBody2D"]
+position = Vector2( 296, 200 )
+shape = SubResource( 2 )
+
+[node name="Camera2D" type="Camera2D" parent="KinematicBody2D"]
+position = Vector2( 16, -34 )
+current = true
+smoothing_enabled = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="KinematicBody2D"]
+
+[node name="AnimatedSprite" type="AnimatedSprite" parent="KinematicBody2D"]
+position = Vector2( 298, 196 )
+scale = Vector2( 3.75, 3.5 )
+frames = SubResource( 3 )
+animation = "Run"
