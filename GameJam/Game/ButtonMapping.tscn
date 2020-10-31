@@ -1,0 +1,48 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://titleGui/font.tres" type="DynamicFont" id=1]
+[ext_resource path="res://titleGui/Menu.gd" type="Script" id=2]
+
+[node name="CanvasLayer" type="CanvasLayer"]
+pause_mode = 2
+script = ExtResource( 2 )
+
+[node name="Panel" type="Panel" parent="."]
+margin_left = 320.0
+margin_top = 120.0
+margin_right = 960.0
+margin_bottom = 600.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Panel"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="back" type="Button" parent="Panel"]
+margin_left = 120.0
+margin_top = 400.0
+margin_right = 224.0
+margin_bottom = 437.0
+custom_fonts/font = ExtResource( 1 )
+text = "Back"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="save" type="Button" parent="Panel"]
+margin_left = 420.0
+margin_top = 400.0
+margin_right = 522.0
+margin_bottom = 437.0
+custom_fonts/font = ExtResource( 1 )
+text = "Save"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+[connection signal="pressed" from="Panel/back" to="." method="back"]
+[connection signal="pressed" from="Panel/save" to="." method="save"]
